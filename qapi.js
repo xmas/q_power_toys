@@ -41,23 +41,6 @@ function startExport() {
       "format": "json"
     })
     .then((response) => {
-      // exec(`setenv Q_PROGRESS_ID_TEMP ${response.data.result.progressId}`, (err, stdout, stderr) => {
-      //   if (err) {
-      //     console.error(`exec error: ${err}`.red);
-      //     // return;
-      //   }      })
-      // exec(`export Q_PROGRESS_ID_TEMP=${response.data.result.progressId}`, (err, stdout, stderr) => {
-      //   if (err) {
-      //     console.error(`exec error: ${err}`.red);
-      //     console.log(exec(`env`, (err, stdout, stderr) => {console.log(stdout)}))
-      //     // return;
-      //   }
-      // })
-      // process.env['Q_PROGRESS_ID_TEMP'] = response.data.result.progressId;
-
-      // console.log(`Download tracked as: ${process.env.Q_PROGRESS_ID_TEMP}`)
-      
-
       console.log(JSON.stringify(response.data.result.progressId, null, 4))
     })
     .catch((error) => {
@@ -66,11 +49,18 @@ function startExport() {
     })
 }
 // CHECK EXPORT
+if (yargs.checkExport) {
+  checkExport()
+}
 function checkExport() {
-  axios.get(`surveys/${process.env.SURVEY}/export-responses/${yargs.pid}`)
+  axios.get(`surveys/${process.env.SURVEY}/export-responses/${yargs.checkExport}`)
     .then((response) => {
-      console.log('sucess'.green)
-      console.log(JSON.stringify(response.data, null, 4))
+      // console.log('sucess'.green)
+      // console.log(JSON.stringify(response.data, null, 4))
+       if (response.data.result.status !== 'complete') {
+         console.log(`Export still processing. Status: ${response.data.result.percentComplete}%`)
+       }
+       console.log(response.data.result.fileId)
     })
     .catch((error) => {
       console.log('fail'.red)
@@ -78,23 +68,26 @@ function checkExport() {
     })
 }
 // GET EXPORT
+if (yargs.getExport) {
+  getExport()
+}
 function getExport() {
-  const download_cmd = `curl -X GET -H 'X-API-TOKEN: ${process.env.QUALTRICS_TOKEN}' -H 'Content-Type: application/json' ${axios.defaults.baseURL}surveys/${process.env.SURVEY}/export-responses/${yargs.fid}/file -o ${yargs.fid}_responses.zip`
+  const download_cmd = `curl -X GET -H 'X-API-TOKEN: ${process.env.QUALTRICS_TOKEN}' -H 'Content-Type: application/json' ${axios.defaults.baseURL}surveys/${process.env.SURVEY}/export-responses/${yargs.getExport}/file -o ${yargs.getExport}_responses.zip`
   exec(download_cmd, (err, stdout, stderr) => {
     if (err) {
       console.error(`exec error: ${err}`.red);
       return;
     }
 
-    console.log(`Exports successfully downloaded`.green);
-    exec(`unzip ${yargs.fid}_responses.zip`, (err, stdout, stderr) => {
-      if (err) {
-        console.error(`exec error: ${err}`.red);
-        return;
-      }
+    console.log(`Exports successfully downloaded. Please unzip your responses.`.green);
+    // exec(`unzip ${yargs.getExport}_responses.zip`, (err, stdout, stderr) => {
+    //   if (err) {
+    //     console.error(`exec error: ${err}`.red);
+    //     return;
+    //   }
 
-      console.log(`Exports successfully unzipped`.green);
-    })
+    //   console.log(`Exports successfully unzipped`.green);
+    // })
   });
 }
 // console.log(`curl -X GET -H 'X-API-TOKEN: ${process.env.QUALTRICS_TOKEN}' -H 'Content-Type: application/json' ${axios.defaults.baseURL}surveys/${process.env.SURVEY}/export-responses/${yargs.fid}/file -o responses.zip`)
