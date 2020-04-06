@@ -58,11 +58,18 @@ let all = _.chain(responses)
   return r.ClientCountry !== 'undefined'
 })
 .groupBy( (r) => { 
-  return r.ClientCountry || r.Country
+  let country =  r.ClientCountry || r.Country
+  if (!country) {
+    return null
+  }
+  let nps = r.QID30_NPS_GROUP === 3 ? 'Promoter' : "Passive or Detractor"
+
+  return `${country} - ${nps}`
+
 })
 .flatMap( (set, groupName) => {
   // console.log(groupName, set.length)
-  if (set.length > 100) {
+  if (set.length > 30) {
     return weightsForResponses(set, groupName)
   } 
   return null
@@ -70,7 +77,7 @@ let all = _.chain(responses)
 .filter()
 .value()
 const ObjectsToCsv = require('objects-to-csv');
-new ObjectsToCsv(all).toDisk(`data/country.csv`);
+new ObjectsToCsv(all).toDisk(`data/country-nps.csv`);
 
 console.log(all)
 
