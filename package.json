@@ -1,0 +1,27 @@
+{
+  "name": "q_power_toys",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xmas/q_power_toys.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xmas/q_power_toys/issues"
+  },
+  "homepage": "https://github.com/xmas/q_power_toys#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "colors": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "lodash": "^4.17.15",
+    "request": "^2.88.2",
+    "yargs": "^15.3.1"
+  }
+}
