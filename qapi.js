@@ -90,4 +90,4 @@ function getExport() {
     // })
   });
 }
-// console.log(`curl -X GET -H 'X-API-TOKEN: ${process.env.QUALTRICS_TOKEN}' -H 'Content-Type: application/json' ${axios.defaults.baseURL}surveys/${process.env.SURVEY}/export-responses/${yargs.fid}/file -o responses.zip`)
+console.log(`curl -X GET -H 'X-API-TOKEN: ${process.env.QUALTRICS_TOKEN}' -H 'Content-Type: application/json' ${axios.defaults.baseURL}surveys/${process.env.SURVEY}/`)
